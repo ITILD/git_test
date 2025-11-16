@@ -22,3 +22,10 @@ print(df)
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+df_processed.write_excel("output.xlsx")
