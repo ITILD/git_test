@@ -1,25 +1,30 @@
+
 import polars as pl
-def main():
-    print("Hello from excel-001!")
-
 import datetime as dt
+from sklearn.linear_model import LinearRegression
 
-df = pl.DataFrame(
-    {
-        "name": ["Alice Archer", "Ben Brown", "Chloe Cooper", "Daniel Donovan"],
-        "birthdate": [
-            dt.date(1997, 1, 10),
-            dt.date(1985, 2, 15),
-            dt.date(1983, 3, 22),
-            dt.date(1981, 4, 30),
-        ],
-        "weight": [57.9, 72.5, 53.6, 83.1],  # (kg)
-        "height": [1.56, 1.77, 1.65, 1.75],  # (m)
-    }
-)
+def linear_regression_prediction():
 
-print(df)
+    arr1=[1,2,3,4,5]
+    arr2=[13,12,20,30,31]
+
+
+
+def main():
+    ex_1=read_and_process_excel("temp/西红柿.xlsx")
+
+
+def read_and_process_excel(file_path: str) -> pl.DataFrame:
+    df = pl.read_excel(file_path)
+    result = df.to_dicts()
+    return result
 
 if __name__ == "__main__":
     main()
-#预测
+
+
+
+
+
+
+
