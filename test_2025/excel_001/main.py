@@ -1,8 +1,6 @@
 
-def main():
-    print("Hello from excel-001!")
 import polars as pl
-import numpy as np
+import datetime as dt
 from sklearn.linear_model import LinearRegression
 
 def linear_regression_prediction():
@@ -12,6 +10,21 @@ def linear_regression_prediction():
 
 
 
+def main():
+    ex_1=read_and_process_excel("temp/西红柿.xlsx")
+
+
+def read_and_process_excel(file_path: str) -> pl.DataFrame:
+    df = pl.read_excel(file_path)
+    result = df.to_dicts()
+    return result
+
 if __name__ == "__main__":
     main()
-#预测
+
+
+
+
+
+
+
