@@ -47,14 +47,16 @@ print(f"插值后的值为: {y_new}")
 
 # 主函数
 def main():
-    ex_1=read_and_process_excel("temp/西红柿.xlsx")
-    print(ex_1)
+    f,Ar=read_and_process_excel("temp/西红柿.xlsx")
+    print(f'f的值为{f}\nAr的值为{Ar}')
     
-
-def read_and_process_excel(file_path: str) -> pl.DataFrame:
+#读取excel表格中的数据并以列表形式返回每一列的数据
+def read_and_process_excel(file_path: str):
     df = pl.read_excel(file_path)
-    result = df.to_dicts()
-    return result
+    result = df.to_dict()
+    f = result['f'].to_list()
+    Ar = result['Ar'].to_list()
+    return f,Ar
 
 if __name__ == "__main__":
     main()
