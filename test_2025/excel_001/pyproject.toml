@@ -1,13 +1,13 @@
 [project]
-name = "text-depend"
+name = "excel-001"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "numpy>=2.3.4",
+    "fastexcel>=0.16.0",
     "polars>=1.35.2",
-]
-dependencies = [
-    "polars>=1.35.2",
-    "xlsx2csv>=0.8.4",
+    "scipy>=1.16.3",
+    "scikit-learn>=1.7.2",
 ]
