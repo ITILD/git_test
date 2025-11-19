@@ -36,96 +36,76 @@ df = read_excel_data(excel_file_path)
 print("读取的数据:")
 print(df)
 
-    
 
+# 1. 计算每月总和（所有动物的总和）
+print("\n1. 每月总和计算:")
+monthly_totals = df.with_columns(
+    pl.sum_horizontal(pl.exclude("月份")).alias("每月总和")
+).select(["月份", "每月总和"])
 
-# # 根据图片中的准确数据创建DataFrame
-# data = {
-#     "月份": ["一月", "二月", "三月", "四月"],
-#     "鸡": [34, 66, 86, 123],
-#     "鸭": [23, 77, 7, 112],
-#     "大象": [4, 6, 7, 21],
-#     "独角兽": [3, 7, 9, 14],
-#     "猛犸象": [2, 6, 6, 7],
-#     "霸王龙": [4, 6, 12, 18]
-# }
+print(monthly_totals)
 
-# df = pl.DataFrame(data)
-# print("原始数据:")
-# print(df)
+# 2. 各动物1-4月总计
+print("\n2. 各动物总计（1-4月）:")
+animal_totals = df.select(
+    pl.exclude("月份").sum()
+).melt(variable_name="动物", value_name="总计")
 
-# # 1. 计算每月总和（所有动物的总和）
-# print("\n1. 每月总和计算:")
-# monthly_totals = df.with_columns(
-#     pl.sum_horizontal(pl.exclude("月份")).alias("每月总和")
-# ).select(["月份", "每月总和"])
+print(animal_totals)
 
-# print(monthly_totals)
+# 3. 添加月份数值列用于回归分析
+df_for_regression = monthly_totals.with_columns(
+    pl.col("月份").replace({"一月": 1, "二月": 2, "三月": 3, "四月": 4}).alias("月份数值")
+)
 
-# # 2. 各动物1-4月总计
-# print("\n2. 各动物总计（1-4月）:")
-# animal_totals = df.select(
-#     pl.exclude("月份").sum()
-# ).melt(variable_name="动物", value_name="总计")
+print("\n3. 回归分析数据:")
+print(df_for_regression)
 
-# print(animal_totals)
+# 4. 使用线性回归预测五月总和
+# 准备数据
+X = df_for_regression.select("月份数值").to_numpy()
+y = df_for_regression.select("每月总和").to_numpy().flatten()
 
-# # 3. 添加月份数值列用于回归分析
-# df_for_regression = monthly_totals.with_columns(
-#     pl.col("月份").replace({"一月": 1, "二月": 2, "三月": 3, "四月": 4}).alias("月份数值")
-# )
+# 训练模型
+model = LinearRegression()
+model.fit(X, y)
 
-# print("\n3. 回归分析数据:")
-# print(df_for_regression)
+# 预测五月（月份=5）
+may_prediction = model.predict([[5]])[0]
 
-# # 4. 使用线性回归预测五月总和
-# # 准备数据
-# X = df_for_regression.select("月份数值").to_numpy()
-# y = df_for_regression.select("每月总和").to_numpy().flatten()
+print(f"\n4. 五月总和预测结果:")
+print(f"五月总和预测: {may_prediction:.0f}")
+print(f"回归方程: 总和 = {model.intercept_:.1f} + {model.coef_[0]:.1f} × 月份")
 
-# # 训练模型
-# model = LinearRegression()
-# model.fit(X, y)
+# 5. 显示详细的每月数据
+print(f"\n5. 详细每月数据:")
+detailed_analysis = df.with_columns(
+    pl.sum_horizontal(pl.exclude("月份")).alias("每月总和")
+)
+print(detailed_analysis)
 
-# # 预测五月（月份=5）
-# may_prediction = model.predict([[5]])[0]
+# 6. 增长率分析
+print(f"\n6. 月度增长率分析:")
+growth_analysis = df_for_regression.with_columns([
+    pl.col("每月总和").diff().alias("月增长量"),
+    ((pl.col("每月总和").diff() / pl.col("每月总和").shift(1)) * 100).round(2).alias("月增长率(%)")
+])
+print(growth_analysis)
 
-# print(f"\n4. 五月总和预测结果:")
-# print(f"五月总和预测: {may_prediction:.0f}")
-# print(f"回归方程: 总和 = {model.intercept_:.1f} + {model.coef_[0]:.1f} × 月份")
+# 7. 最终预测报告
+print(f"\n{'='*50}")
+print(f"📊 五月预测报告")
+print(f"{'='*50}")
+print(f"基于1-4月数据:")
+for i in range(len(df_for_regression)):
+    month = df_for_regression["月份"][i]
+    total = df_for_regression["每月总和"][i]
+    print(f"  {month}: {total}")
 
-# # 5. 显示详细的每月数据
-# print(f"\n5. 详细每月数据:")
-# detailed_analysis = df.with_columns(
-#     pl.sum_horizontal(pl.exclude("月份")).alias("每月总和")
-# )
-# print(detailed_analysis)
-
-# # 6. 增长率分析
-# print(f"\n6. 月度增长率分析:")
-# growth_analysis = df_for_regression.with_columns([
-#     pl.col("每月总和").diff().alias("月增长量"),
-#     ((pl.col("每月总和").diff() / pl.col("每月总和").shift(1)) * 100).round(2).alias("月增长率(%)")
-# ])
-# print(growth_analysis)
-
-# # 7. 最终预测报告
-# print(f"\n{'='*50}")
-# print(f"📊 五月预测报告")
-# print(f"{'='*50}")
-# print(f"基于1-4月数据:")
-# for i in range(len(df_for_regression)):
-#     month = df_for_regression["月份"][i]
-#     total = df_for_regression["每月总和"][i]
-#     print(f"  {month}: {total}")
-
-# print(f"\n📈 预测结果:")
-# print(f"  五月总和预测: {may_prediction:.0f}")
-# print(f"  平均月增长: {model.coef_[0]:.1f}")
-# print(f"  预测置信度: 基于线性回归模型，R² = {model.score(X, y):.3f}")
-
-
-
+print(f"\n📈 预测结果:")
+print(f"  五月总和预测: {may_prediction:.0f}")
+print(f"  平均月增长: {model.coef_[0]:.1f}")
+print(f"  预测置信度: 基于线性回归模型，R² = {model.score(X, y):.3f}")
 # ========================
 def main():
     input_dir = Path("input_xlsx")
