@@ -1,7 +1,7 @@
-    # 从Excel文件读取数据的示例
-import polars as pl
+# 从Excel文件读取数据的示例
 import datetime as dt
 from pathlib import Path
+import polars as pl
 from sklearn.linear_model import LinearRegression
 
 
@@ -145,11 +145,11 @@ def main():
         return
 
     print(f"🔍 找到 {len(xlsx_files)} 个 Excel 文件，开始处理...")
-# 逐个处理文件
+# 逐个处理文件,未完成
 
 
 
-# 未完成
+
     for file_path in xlsx_files:
         try:
             print(f"\n📄 正在处理: {file_path.name}")
