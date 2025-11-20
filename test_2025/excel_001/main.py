@@ -9,6 +9,26 @@ from sklearn.linear_model import LinearRegression
 from sklearn.datasets import make_regression
 from pydantic import BaseModel
 app=FastAPI()
+
+    
+#读取excel表格中的数据并以列表形式返回每一列的数据
+def read_and_process_excel(file_path: str):
+    try:
+        df = pl.read_excel(file_path)
+        required_columns=['f','Ar']
+        missing_cols=[col for col in required_columns if col not in df.columns]
+        #检查需要的列是否存在
+        if missing_cols:
+             raise ValueError(f'Excel文件中缺少列:{missing_cols}') 
+        f_list = df['f'].to_list()
+        Ar_list = df['Ar'].to_list()
+        return f_list,Ar_list
+    except FileNotFoundError:
+         raise FileNotFoundError(f'文件不存在：{file_path}')
+    except Exception as e:
+         raise RuntimeError(f'读取Excel失败:{str(e)}')
+    
+
 # 生成随机回归训练数据集，有100个实列即100行
 X, y = make_regression(n_samples=100, n_features=2, noise=0.1, random_state=1)
 # 拟合模型
@@ -46,18 +66,8 @@ x_new = 2.5
 y_new = f(x_new)
 y_new=int(y_new)
 print(f"插值后的值为: {y_new}")
-# 主函数
-def main():
-    f,Ar=read_and_process_excel("temp/西红柿.xlsx")
-    print(f'f的值为{f}\nAr的值为{Ar}')
-    
-#读取excel表格中的数据并以列表形式返回每一列的数据
-def read_and_process_excel(file_path: str):
-    df = pl.read_excel(file_path)
-    result = df.to_dict()
-    f = result['f'].to_list()
-    Ar = result['Ar'].to_list()
-    return f,Ar
+
+ 
 class Item(BaseModel):
     y_new:int
 T=TypeVar("T")
@@ -77,6 +87,11 @@ async def get_items_model3(item_id:int):
         return SuccessResponse[Item](data=item)
     else:
         return ErrorResponse(message="Item没有找到",code=500)
+    
+# 主函数
+def main():
+    f,Ar=read_and_process_excel("temp/西红柿.xlsx")
+    print(f'f的值为{f}\nAr的值为{Ar}')
     
 if __name__=="__main__":
     import uvicorn
