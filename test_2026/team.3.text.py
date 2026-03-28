@@ -1,2 +1,3 @@
-name1=mcz
-name2=gyx
+成员1 马诚泽
+成员2 高镱轩
+咋在python文件中交了🐶
