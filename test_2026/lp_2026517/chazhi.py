@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import CubicSpline
 
-def data(x_known:list, y_known:list, month:int)->int:
+def data(x_known:list, y_known:list, month:int)->float:
     """_summary_
 
     Args:
@@ -15,7 +15,7 @@ def data(x_known:list, y_known:list, month:int)->int:
     x_known_np = np.array(x_known)
     y_known_np = np.array(y_known)
     cs = CubicSpline(x_known_np, y_known_np)
-    return cs(month)
+    return float(cs(month))
     
     
 if __name__ == "__main__":
