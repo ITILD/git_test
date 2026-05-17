@@ -4,4 +4,12 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pandas>=3.0.3",
+]
+[[tool.uv.index]]# uv的索引
+# 清华源
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+# 阿里源
+# url = "https://mirrors.aliyun.com/pypi/simple/"
+default = true
