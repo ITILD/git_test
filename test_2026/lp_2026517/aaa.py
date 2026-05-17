@@ -1,11 +1,18 @@
 import polars as pl
 def read(path_self):
-    path_self="temp/test(1).xlsx"
-    df = pl.read_excel(path_self)
+    df = pl.read_excel(path_self,
+    has_header=False)
     print(df)
     
  # 修复列名（解决Series name报错）
-    df.columns = [str(col) for col in df.columns]
+    # df.columns = [str(col) for col in df.columns]
+ # 1. 把整个DataFrame转成 list（二维列表）
+    data_list = [list(row) for row in df.rows()]
+    print("\n二维列表形式（每行一个子列表）：")
+    print(data_list)
+
+    # 其他操作...（修改、写回）
+    return  data_list  # 返回list    
 
 # #  处理数据（示例：新增一行）
 # new_row = pl.DataFrame({
@@ -31,3 +38,4 @@ def read(path_self):
 if __name__ == "__main__":   
     path_self="temp/test(1).xlsx"
     data:list =read(path_self)
+    print(data)
