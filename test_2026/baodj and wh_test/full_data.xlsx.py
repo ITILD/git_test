@@ -7,7 +7,7 @@ import numpy as np
 # 1. 读取你的原始Excel文件
 # ----------------------
 # 把这里改成你自己的文件名
-df = pl.read_excel("你的原始数据.xlsx")  
+df = pl.read_excel("text1.xlsx")  
 print("原始数据预览：")
 print(df)
 
