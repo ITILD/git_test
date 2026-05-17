@@ -1,5 +1,5 @@
 import polars as pl
-def read():
+def read(path_self):
     path_self="temp/test(1).xlsx"
     df = pl.read_excel(path_self)
     print(df)
