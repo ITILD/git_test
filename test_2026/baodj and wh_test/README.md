@@ -14,7 +14,4 @@
 | A | baodj | 读取Excel、补全缺失月份、scipy插值、输出完整表格 | full_data.xlsx |
 | B | wenhan |  生成对比折线图、美化图表、编写项目文档、Gitee仓库提交 | trend_compare.png、README.md、Gitee仓库 |
 
-## 运行步骤
-1. 安装依赖
-```bash
-pip install polars openpyxl scipy matplotlib
+
