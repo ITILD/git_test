@@ -4,4 +4,17 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "fastexcel>=0.20.2",
+    "matplotlib>=3.10.9",
+    "polars>=1.40.1",
+    "scipy>=1.17.1",
+    "xlsxwriter>=3.2.9",
+]
+
+[[tool.uv.index]]# uv的索引
+# 清华源
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+# 阿里源
+# url = "https://mirrors.aliyun.com/pypi/simple/"
+default = true
