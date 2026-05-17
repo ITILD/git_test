@@ -2,9 +2,12 @@ import polars as pl
 import numpy as np
 from scipy.interpolate import interp1d
 
-# 1. 读取文件
-df = pl.read_excel(r"C:\Users\HP\OneDrive\Desktop\workspace\test\git_test\test_2026\baodj and wh_test\temp\test1.xlsx")
-print("✅ 原始数据读取成功，预览：")
+# ----------------------
+# 1. 读取你的原始Excel文件
+# ----------------------
+
+df = pl.read_excel("temp/test1.xlsx")  
+print("原始数据预览：")
 print(df)
 
 # 2. 把列2-6转成浮点数，处理null值
