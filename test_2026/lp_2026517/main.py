@@ -2,7 +2,8 @@ import numpy as np
 import polars as pl
 from scipy.interpolate import CubicSpline
 from chazhi import data
-from aaa import read,write
+from aaa import read
+from aaa import write
 
 def main():
     print("Hello from lp-2026517!")

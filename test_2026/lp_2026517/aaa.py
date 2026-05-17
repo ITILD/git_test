@@ -76,10 +76,56 @@ def write(file_path: str, months: list, values: list):
     wb.save(file_path)
 # ========== 主程序 ==========
 
+
+def write(months: list, values: list, output_path: str):
+    """
+    将补全后的月份和数值写入 Excel 文件。
+    保持与 read 函数一致的格式：第一行为月份，第二行为数值（横向排列）。
+    """
+    # 构建字典，将月份和数值打包成两行数据（注意这里用列表包列表）
+    data = {
+        "row1": [months],   # 第一行：月份列表
+        "row2": [values]    # 第二行：数值列表
+    }
+    
+    # 创建 Polars DataFrame
+    df_out = pl.DataFrame(data)
+    
+    # 写入 Excel
+    # write_schema=False 防止把列名(row1, row2)写进 Excel
+    # header=False 防止写入额外的表头，完美还原纯数据格式
+    df_out.write_excel(output_path, write_schema=False, header=False, autofit=True)
+    print(f"✅ 数据已成功保存至: {output_path}")
+    
+    
+# ========== 主程序 ==========
 if __name__ == "__main__":
     path_self = "temp/test(1).xlsx"
-    x_known, y_known, missing = read(path_self)
+    
+    try:
+        # 1. 读取原始数据
+        x_known, y_known, missing = read(path_self)
 
-    print(f"已知月份: {x_known}")
-    print(f"已知数值: {y_known}")
-    print(f"缺失月份: {missing}")
+        print(f"已知月份: {x_known}")
+        print(f"已知数值: {y_known}")
+        print(f"缺失月份: {missing}")
+        
+        # 2. 模拟插值过程
+        all_months = sorted(x_known + missing)
+        all_values = []
+        
+        # 将已知数据转为字典，提高后续查找效率（避免在循环中反复使用 index 查找）
+        known_dict = dict(zip(x_known, y_known))
+        avg_val = sum(y_known) / len(y_known) # 模拟插值的均值
+        
+        for m in all_months:
+            if m in known_dict:
+                val = known_dict[m]  # 已知月份，直接取值
+            else:
+                val = avg_val        # 缺失月份，填入模拟的插值结果
+            all_values.append(val)
+        
+        # 3. 覆盖写入原表
+        write(all_months, all_values, path_self)
+    except Exception as e:
+        print(f"❌ 发生错误: {e}")
